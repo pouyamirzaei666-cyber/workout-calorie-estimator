@@ -41,7 +41,7 @@ The target variable is `Calories_Burned`. The data was split into training and t
 | RMSE | 40.57 calories |
 | R-squared | 0.980 |
 
-The test-set results describe this particular split. The test set was also viewed during model comparison, so these scores should not be treated as a completely untouched final evaluation.
+The test set was viewed during model comparison and permutation-importance analysis, so the reported test scores and importance ranking are exploratory and may be optimistic. They should not be treated as a completely untouched final evaluation.
 
 ### Error by Workout Type
 
@@ -51,6 +51,32 @@ The test-set results describe this particular split. The test set was also viewe
 | HIIT | 42 | 29.60 | 41.28 |
 | Cardio | 46 | 30.49 | 40.21 |
 | Yoga | 60 | 32.10 | 42.25 |
+
+### Train, Cross-Validation, and Test Check
+
+The selected Linear Regression pipeline was compared across the training data, five-fold cross-validation on the training data, and the test split.
+
+| Data | MAE (calories) | RMSE (calories) | R-squared |
+|---|---:|---:|---:|
+| Train | 29.56 | 38.95 | 0.979 |
+| 5-fold cross-validation mean | 30.47 | 40.00 | 0.978 |
+| Test | 30.27 | 40.57 | 0.980 |
+
+The close scores provide no clear evidence of strong overfitting on this split, but they do not prove that overfitting is absent.
+
+### Permutation Feature Importance
+
+Permutation importance estimates how much test-set MAE increases when one input column is shuffled. Larger increases suggest the fitted model relied more on that input for this split; this is not evidence of cause and effect.
+
+| Feature | MAE increase after shuffling (calories) |
+|---|---:|
+| Session duration | 263.86 |
+| Average heart rate (`Avg_BPM`) | 76.31 |
+| Age | 29.48 |
+| Gender | 27.63 |
+| BMI | 11.39 |
+
+Session duration ranked highest, followed by average heart rate. Workout frequency showed a positive bivariate relationship in the exploratory plots, but had almost no additional permutation importance after the other inputs were included. Correlated features can share importance, and this ranking is specific to this model and split.
 
 ## Installation
 
